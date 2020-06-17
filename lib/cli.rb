@@ -1,64 +1,90 @@
  require_relative '../config/environment.rb'
  require 'tty-prompt'
  
-# class Interface
-#     attr_accessor :prompt, :guests
-    # def initialize
+class Controller
+    attr_accessor :prompt, :guest
 
+    def initialize()
         @prompt = TTY::Prompt.new
-        @guests = {}
+        
+    end
 
 
 
     def welcome
-        @prompt.say('Hello there!! Welcome to Cosmos Travelers ! We travel all across the known Universe!')
-    end
+        prompt.say('Hello there!! Welcome to Cosmos Travelers ! We travel all across the known Universe!
+            
+            ')
+        sleep(1)
+        prompt.say('Lets get started shall we....
+                
+                
+                
+        ')
+        sleep(1)
 
-    def ask_name
-        @prompt.ask('To get started, tell me your name?', default: ENV['USER'])
-    
-    end
+     #     puts 'Who will be travling the stars today?'
+        #     guest_name = gets.chomp
 
-    def welcome_with_name(name)
-        @prompt.say("Thanks #{@guests.name}, for choosing us for your interstellar travel needs!")
-    end
+        # end
 
-    def account
-        @prompt.say("Let's start traveling through the Cosmos!")
-        @prompt.select("LOGIN or NEW ACCOUNT?") do |menu|
-            menu.choice "LOGIN", -> {existing_guests()}
-            menu.choice "NEW ACCOUNT", -> {new_guests()}
+
+
+        # def welcome_with_name(guest_name)
+        #     prompt.say("Thanks #{guests.name}, for choosing us for your interstellar travel needs!")
+
+        prompt.say("Let's start traveling through the Cosmos!")
+        prompt.select("LOGIN or NEW ACCOUNT?") do |menu|
+            menu.choice "LOGIN", -> {Guest.existing_guests}
+            menu.choice "NEW ACCOUNT", -> {Guest.new_guests}
             menu.choice "EXIT", -> {exit_program()}
         end
     end
 
-    def new_guests
-        @prompt.say("Welcome, future traveler")
-            guests_hash = @prompt.collect do 
-            key(:name).ask("What is your name?")
-            end
-            guests_hash[:location] 
-            @guests = Guests.create(guests_hash)
-        end
     
     
-    def existing_guests
-        @prompt.say("Welcome back traveler! This means we're doing a great job!")
-        guests_name = @prompt.ask("What is your name?")
-        if Guests.find_by(name: guests_name) == nil
-            @prompt.say("Sorry, we don't recognize you. Try CREATING A NEW ACCOUNT.")
-            new_guests()
-        else
-            @guests = Guests.find_by(name: guests_name)
-            @prompt.say ("Welcome back, #{@guests[:name]}. Nice to have you with us again")
+    def main_menu
+        system "clear"
+        prompt.select("What do you want to do?") do |menu|
+            menu.choice "Book my hotel!", -> {book_hotel}
+            menu.choice "See my hotel", -> {my_hotels}
+            menu.choice "See our available hotels", -> {all_hotels}
+            menu.choice "See the Galaxies cuurently available"
+            menu.choice "Back to Main Menu", -> {welcome}
         end
-          main_menu()    
     end
+
+    def all_hotels
+        Hotel.all.map do |hotel|
+        puts hotel.name
+        end
+        self.main
+    end
+end
+
+
+
+def exit_program
+    system "clear"
+    prompt.say(" 
+        
+                'During our brief stay on Earth, we owe it to ourselfves and our descendants the\n 
+        
+                oppurtunity to explore. The day or knowledge of the Cosmos ceases\n
+
+                to expand, we risk regressing to the childish view that the Universe\n 
+                
+                figuratively and literally revolves around us'\n\n
+
+                    - Neil deGrasse Tyson\n
+                    astrophysicist
+        
+        
+        
+                ")
+    exit!
     
-
-
-
-
+end
     # def available_locations
     # puts "Here's the Galaxies we're currently flying to!"
     
